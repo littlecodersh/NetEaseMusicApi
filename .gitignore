@@ -1,0 +1,5 @@
+build/*
+dist/*
+NetEaseMusicApi.egg-info/*
+*.pyc
+*.swp
