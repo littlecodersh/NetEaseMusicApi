@@ -1,6 +1,6 @@
 #coding=utf8
 import os
-from RawApi import NetEaseMusicApi
+from RawApi import NetEaseMusicApi, get_dfsId
 
 __all__ = ['save_song', 'save_album']
 
@@ -50,9 +50,12 @@ def save_song(songName, folder = '.', candidateNumber = DEFAULT_LIMIT):
     if not songId: return
     song = api.song.detail(songId)[0]
     if not os.path.exists(folder): os.mkdir(folder)
-    with open(os.path.join(folder, song['name'] + '.mp3'), 'wb') as f:
-        f.write(api.download(song['bMusic']['dfsId']))
-    print('%s.mp3 is downloaded successfully in "%s"'%(song['name'], folder))
+    if get_dfsId(song) is None:
+        print('%s.mp3 is sadly lost on the server'%song['name'])
+    else:
+        with open(os.path.join(folder, song['name'] + '.mp3'), 'wb') as f:
+            f.write(api.download(get_dfsId(song)))
+        print('%s.mp3 is downloaded successfully in "%s"'%(song['name'], folder))
 
 def save_album(albumName, folder = '.', candidateNumber = DEFAULT_LIMIT):
     albumId = search_album_id_by_name(albumName, candidateNumber)
@@ -64,13 +67,14 @@ def save_album(albumName, folder = '.', candidateNumber = DEFAULT_LIMIT):
     for song in songs:
         print('Downloading %s...'%song['name'])
         try:
+            if get_dfsId(song) is None: raise Exception
             with open(os.path.join(songDir, song['name'] + '.mp3'), 'wb') as f:
-                f.write(api.download(song['bMusic']['dfsId']))
+                f.write(api.download(get_dfsId(song)))
         except:
             print('%s download failed'%song['name'])
     print('%s is downloaded successfully in "%s"'%(albumName, songDir))
 
 if __name__ == '__main__':
-    print(str(search_song_by_name(u'南山南')))
-    print(str(search_album_id_by_name(u'南山南')))
-    save_album(u'孤岛')
+    # save_album(u'孤岛')
+    save_song(u'南山南')
+

@@ -92,6 +92,17 @@ def encrypted_id(dfsId):
     result = result.replace('+', '-')
     return result
 
+def get_dfsId(song):
+    dfsId = None
+    for musicIndex in ('hMusic', 'mMusic', 'lMusic', 'bMusic'):
+        try:
+            if not song[musicIndex]['name'] is None:
+                dfsId = song[musicIndex]['dfsId']
+            if not dfsId is None: break
+        except:
+            pass
+    return dfsId
+
 class NetEaseMusicApi(object):
     def __init__(self):
         _setup_apiobj(self, _API)
