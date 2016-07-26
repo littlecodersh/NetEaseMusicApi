@@ -1,6 +1,8 @@
 NetEaseMusicApi
 ===============
 
+|Python2| |Python3|
+
 Complete api for NetEase Cloud Music
 
 **Usage**
@@ -28,3 +30,6 @@ Complete api for NetEase Cloud Music
 
     from NetEaseMusicApi import api, save_song, save_album
     save_song('Apologize')
+
+.. |Python2| image:: https://img.shields.io/badge/python-2.7-ff69b4.svg
+.. |Python3| image:: https://img.shields.io/badge/python-3.5-red.svg

@@ -1,5 +1,5 @@
 #coding=utf8
-import md5, base64, random
+import hashlib, base64, random
 import requests, json
 import os, sys, time
 
@@ -75,19 +75,18 @@ def _APIProxy(key, value, chain):
         return __APIProxy
 
 def _setup_apiobj(parent, apiList, chain = []):
-    for k, v in apiList.iteritems():
+    for k, v in apiList.items():
         setattr(parent, k, _APIProxy(k, v, chain + [k]))
         if isinstance(v, dict): _setup_apiobj(getattr(parent, k), v, chain + [k])
 
 def encrypted_id(dfsId):
-    byte1 = bytearray('3go8&$8*3*3h0k(2)2')
-    byte2 = bytearray(str(dfsId))
+    byte1 = bytearray('3go8&$8*3*3h0k(2)2', 'utf8')
+    byte2 = bytearray(str(dfsId), 'utf8')
     byte1_len = len(byte1)
-    for i in xrange(len(byte2)):
+    for i in range(len(byte2)):
         byte2[i] = byte2[i]^byte1[i%byte1_len]
-    m = md5.new()
-    m.update(byte2)
-    result = m.digest().encode('base64')[:-1]
+    m = hashlib.md5(byte2).digest()
+    result = base64.b64encode(m).decode('utf8')
     result = result.replace('/', '_')
     result = result.replace('+', '-')
     return result

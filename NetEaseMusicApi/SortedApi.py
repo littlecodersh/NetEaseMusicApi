@@ -1,6 +1,6 @@
 #coding=utf8
 import os
-from RawApi import NetEaseMusicApi, get_dfsId
+from .RawApi import NetEaseMusicApi, get_dfsId
 
 __all__ = ['save_song', 'save_album']
 
@@ -24,11 +24,11 @@ def _select_index(itemList, detailList, singleDetailLength = 10):
             valueList.append(value[:singleDetailLength])
         return '-'.join(valueList)
     for i, item in enumerate(itemList):
-        print(('%-' + str(len(itemList)/10 + 4) + 's%s')%(
+        print(('%-' + str(int(len(itemList)/10) + 4) + 's%s')%(
             '[%s]'%(i+1), _get_detail(item, detailList)))
     while 1:
         try:
-            selectIndex = int(raw_input('Which one do you want? ')) - 1
+            selectIndex = int(input('Which one do you want? ')) - 1
             if selectIndex < 0 or len(itemList) < selectIndex: raise Exception
             break
         except:
