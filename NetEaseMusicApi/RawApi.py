@@ -3,7 +3,7 @@ import hashlib, base64, random
 import requests, json
 import os, sys, time
 
-__all__ = ['NetEaseMusicApi']
+__all__ = ['NetEaseMusicApi', 'get_dfsId']
 
 DEFAULT_LIMIT = 10
 BASE_URL = 'http://music.163.com/api/'

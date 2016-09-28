@@ -15,7 +15,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='NetEaseMusicApi',
 
-    version='1.0.2',
+    version='1.0.3',
 
     description='A complete NetEase cloud music api',
     long_description=long_description,
