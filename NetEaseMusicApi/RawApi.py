@@ -26,6 +26,7 @@ _API = {
     'download': '',
     'song': {
         'detail': ('/?id={0}&ids=%5B{0}%5D', 'songs'),
+        'lyric' : ('?id={0}&lv={1}','lrc'),
     },
     'artist': {
         'albums': ('/{0}?id={0}&limit={1}', 'hotAlbums'),
@@ -108,3 +109,6 @@ class NetEaseMusicApi(object):
 
 if __name__ == '__main__':
     api = NetEaseMusicApi()
+    #参数分别是歌曲id以及是否为lrc格式
+    l = api.song.lyric(93920,-1)
+
