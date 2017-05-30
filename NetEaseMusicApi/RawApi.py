@@ -3,7 +3,7 @@ import hashlib, base64, random
 import requests, json
 import os, sys, time
 
-__all__ = ['NetEaseMusicApi', 'get_dfsId']
+__all__ = ['NetEaseMusicApi']
 
 DEFAULT_LIMIT = 10
 BASE_URL = 'http://music.163.com/api/'
@@ -65,7 +65,7 @@ def _APIProxy(key, value, chain):
                 j = requests.post(url, data, headers = headers).json()
                 return _get_value(j, 'result/' + value[1])
             elif chain[0] == 'download':
-                url = 'http://m%d.music.126.net/%s/%s.mp3'%(random.randrange(1, 3), encrypted_id(nameOrId), nameOrId)
+                url = 'http://music.163.com/song/media/outer/url?id=%s.mp3' % nameOrId
                 r = requests.get(url, headers = headers)
                 return r.content
             else:
@@ -78,29 +78,6 @@ def _setup_apiobj(parent, apiList, chain = []):
     for k, v in apiList.items():
         setattr(parent, k, _APIProxy(k, v, chain + [k]))
         if isinstance(v, dict): _setup_apiobj(getattr(parent, k), v, chain + [k])
-
-def encrypted_id(dfsId):
-    byte1 = bytearray('3go8&$8*3*3h0k(2)2', 'utf8')
-    byte2 = bytearray(str(dfsId), 'utf8')
-    byte1_len = len(byte1)
-    for i in range(len(byte2)):
-        byte2[i] = byte2[i]^byte1[i%byte1_len]
-    m = hashlib.md5(byte2).digest()
-    result = base64.b64encode(m).decode('utf8')
-    result = result.replace('/', '_')
-    result = result.replace('+', '-')
-    return result
-
-def get_dfsId(song):
-    dfsId = None
-    for musicIndex in ('hMusic', 'mMusic', 'lMusic', 'bMusic'):
-        try:
-            if not song[musicIndex]['name'] is None:
-                dfsId = song[musicIndex]['dfsId']
-            if not dfsId is None: break
-        except:
-            pass
-    return dfsId
 
 class NetEaseMusicApi(object):
     def __init__(self):
