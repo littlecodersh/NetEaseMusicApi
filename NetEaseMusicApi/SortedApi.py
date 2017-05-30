@@ -53,6 +53,7 @@ def save_song(songName, folder='.', candidateNumber=DEFAULT_LIMIT):
     if not os.path.exists(folder): os.mkdir(folder)
     with open(os.path.join(folder, song['name'] + '.mp3'), 'wb') as f:
         f.write(api.download(songId))
+    print('%s.mp3 is downloaded successfully in "%s"'%(song['name'], folder))
 
 def save_album(albumName, folder='.', candidateNumber=DEFAULT_LIMIT):
     albumId = search_album_id_by_name(albumName, candidateNumber)
