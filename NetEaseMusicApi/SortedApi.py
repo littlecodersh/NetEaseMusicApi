@@ -1,6 +1,6 @@
 #coding=utf8
 import os
-from .RawApi import NetEaseMusicApi, get_dfsId
+from .RawApi import NetEaseMusicApi
 
 __all__ = ['save_song', 'save_album', 'interact_select_song']
 
@@ -51,13 +51,8 @@ def save_song(songName, folder='.', candidateNumber=DEFAULT_LIMIT):
     if not songId: return
     song = api.song.detail(songId)[0]
     if not os.path.exists(folder): os.mkdir(folder)
-    dfsId = get_dfsId(song)
-    if dfsId is None:
-        print('%s.mp3 is sadly lost on the server'%song['name'])
-    else:
-        with open(os.path.join(folder, song['name'] + '.mp3'), 'wb') as f:
-            f.write(api.download(dfsId))
-        print('%s.mp3 is downloaded successfully in "%s"'%(song['name'], folder))
+    with open(os.path.join(folder, song['name'] + '.mp3'), 'wb') as f:
+        f.write(api.download(songId))
 
 def save_album(albumName, folder='.', candidateNumber=DEFAULT_LIMIT):
     albumId = search_album_id_by_name(albumName, candidateNumber)
@@ -69,9 +64,8 @@ def save_album(albumName, folder='.', candidateNumber=DEFAULT_LIMIT):
     for song in songs:
         print('Downloading %s...'%song['name'])
         try:
-            if get_dfsId(song) is None: raise Exception
             with open(os.path.join(songDir, song['name'] + '.mp3'), 'wb') as f:
-                f.write(api.download(get_dfsId(song)))
+                f.write(api.download(song['id']))
         except:
             print('%s download failed'%song['name'])
     print('%s is downloaded successfully in "%s"'%(albumName, songDir))
@@ -131,13 +125,9 @@ def _interact_select_song(folder='.'):
         if songId:
             song = api.song.detail(songId)[0]
             songDir = os.path.join(folder, song['name'] + '.mp3')
-            dfsId = get_dfsId(song)
-            if dfsId is None:
-                yield u'抱歉，该歌曲目前无法提供'
-            else:
-                with open(songDir, 'wb') as f: f.write(api.download(dfsId))
-                os.startfile(songDir)
-                yield u'%s 正在播放'%songName
+            with open(songDir, 'wb') as f: f.write(api.download(songId))
+            os.startfile(songDir)
+            yield u'%s 正在播放'%songName
         else:
             yield u'无效选项，请重新搜索'
 iss = _interact_select_song()
